@@ -2,6 +2,11 @@
 
 一款以汉代六博为主题的**可玩网页游戏与数字博物馆**。支持双人本地对弈、人机对弈、完整规则判定、考据证据面板、桌面与手机布局。
 
+**在线游玩**：[https://joge-xi.github.io/liubo-hanju/](https://joge-xi.github.io/liubo-hanju/)  
+**GitHub 仓库**：[https://github.com/joge-xi/liubo-hanju](https://github.com/joge-xi/liubo-hanju)
+
+[![Deploy to GitHub Pages](https://github.com/joge-xi/liubo-hanju/actions/workflows/pages.yml/badge.svg)](https://github.com/joge-xi/liubo-hanju/actions/workflows/pages.yml)
+
 > **重要声明**
 >
 > 六博的完整规则已经失传。本项目不是“汉代原制标准答案”，而是一套有明确来源标注的**现代可玩复原**。所选方案名为 **汉局·杀枭竞速 v1.0.0**：以“六箸十二棋”“枭贵而必杀枭”“五白”“争道”等文献线索为骨架，把无法确认的路线、吃子、计分与回合上限明确标为现代设定。
