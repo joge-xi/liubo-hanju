@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="6" fill="#17120e"/>
+  <rect x="5" y="5" width="54" height="54" rx="2" fill="#a9372a" stroke="#e4c37c" stroke-width="1.4"/>
+  <rect x="9" y="9" width="46" height="46" fill="none" stroke="#f3ddb0" stroke-opacity=".55"/>
+  <text x="32" y="45" text-anchor="middle" font-family="KaiTi, STKaiti, serif" font-size="37" fill="#f8e6c1">博</text>
+</svg>

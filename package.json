@@ -1,0 +1,23 @@
+{
+  "name": "liubo-hanju",
+  "displayName": "六博·汉局",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "六博·汉局：基于汉代六博文献线索与现代复原假说制作的可玩网页游戏，支持双人本地对弈与人机对弈。",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "dev": "node scripts/serve.mjs",
+    "start:phone": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/start-phone.ps1",
+    "build": "node scripts/build-static.mjs",
+    "preview": "node scripts/serve.mjs --dir dist --port 4180 --host 127.0.0.1",
+    "start:public": "node scripts/start-public.mjs",
+    "test": "node --test",
+    "test:restricted": "node --test --test-isolation=none",
+    "test:browser": "node scripts/browser-smoke.mjs",
+    "verify": "node --test && node scripts/browser-smoke.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

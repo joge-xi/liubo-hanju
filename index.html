@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="六博·汉局：基于汉代六博文献线索与现代复原假说制作的可玩网页游戏。支持双人本地对弈与人机对弈，并公开标注史料、假说与现代简化规则。"
+    />
+    <meta name="theme-color" content="#17120e" />
+    <title>六博 · 汉局 | 汉代六博数字复原</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./src/styles/main.css" />
+  </head>
+  <body>
+    <div class="scene" aria-hidden="true">
+      <div class="scene-grain"></div>
+      <div class="scene-vignette"></div>
+      <div class="scene-moon"></div>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="六博·汉局，回到页首">
+        <span class="brand-seal" aria-hidden="true">博</span>
+        <span class="brand-copy">
+          <strong>六博 · 汉局</strong>
+          <span>LIUBO · A HAN DYNASTY RECONSTRUCTION</span>
+        </span>
+      </a>
+      <div class="header-tools">
+        <span class="version-chip"><i aria-hidden="true"></i> 可玩复原 v1.0</span>
+        <button type="button" class="text-button" id="guideBtn">考据与规则</button>
+        <button type="button" class="outline-button" id="newGameBtn">新局</button>
+      </div>
+    </header>
+
+    <main class="game-shell">
+      <section class="stage" aria-labelledby="turnTitle">
+        <div class="stage-head">
+          <div class="stage-title">
+            <p class="turn-meta">
+              <span class="pulse-dot" aria-hidden="true"></span>
+              <span>第 <b id="roundNo">1</b> 回合</span>
+              <span class="meta-divider">·</span>
+              <span id="plyLabel">第 1 手</span>
+            </p>
+            <h1 id="turnTitle">
+              <span class="turn-seal" id="turnSeal">朱</span>
+              <span id="turnText">朱方当投箸</span>
+            </h1>
+            <p class="turn-hint" id="turnHint">先投六箸，再点选有光晕的棋子。</p>
+          </div>
+          <span class="mode-chip" id="modeChip">双人 · 本地</span>
+        </div>
+
+        <div class="board-wrap">
+          <div class="board-ribbon">
+            <span>博局 · 汉式重绘</span>
+            <span class="board-ribbon-divider"></span>
+            <span>28 位现代行棋线</span>
+          </div>
+          <svg
+            id="board"
+            class="board-svg"
+            viewBox="0 0 1000 1000"
+            role="group"
+            aria-label="六博棋盘"
+          ></svg>
+          <div class="board-stamp" aria-hidden="true">汉局</div>
+        </div>
+
+        <div class="board-legend">
+          <div class="legend-items">
+            <span class="legend-item"><i class="legend-dot"></i>合法落点</span>
+            <span class="legend-item"><i class="legend-ring"></i>可选棋子</span>
+            <span class="legend-item"><i class="legend-capture"></i>可吃子</span>
+          </div>
+          <button
+            type="button"
+            class="route-toggle"
+            id="routeToggle"
+            aria-pressed="true"
+          >
+            隐藏行棋线
+          </button>
+        </div>
+
+        <p class="board-disclaimer">
+          行棋线、吃子与计分为现代可玩复原；“杀枭”胜负取文献解释。
+          <button type="button" class="inline-link" id="boardEvidenceLink">查看依据</button>
+        </p>
+      </section>
+
+      <aside class="side-panel" aria-label="对局控制">
+        <section class="panel throw-card" aria-labelledby="throwTitle">
+          <div class="panel-top">
+            <div>
+              <p class="eyebrow">六箸</p>
+              <h2 id="throwTitle">投箸定步</h2>
+            </div>
+            <span class="small-tag" id="rollBadge">待投</span>
+          </div>
+
+          <div
+            class="sticks"
+            id="sticks"
+            role="img"
+            aria-label="六根尚未投掷的箸"
+          ></div>
+
+          <div class="roll-readout">
+            <span class="roll-number" id="rollNumber">—</span>
+            <div class="roll-copy">
+              <strong id="rollLabel">尚未投掷</strong>
+              <small id="rollHint">六箸数白，得 0—6 步</small>
+            </div>
+          </div>
+
+          <div class="action-stack">
+            <button type="button" class="primary-button" id="rollBtn">投掷六箸</button>
+            <button type="button" class="secondary-button" id="passBtn" hidden>
+              无棋可走 · 过手
+            </button>
+          </div>
+          <p class="micro-note">五白 / 六白加 1 筹为现代奖励设定。</p>
+        </section>
+
+        <section class="panel players-card" aria-labelledby="playersTitle">
+          <div class="panel-top">
+            <div>
+              <p class="eyebrow">对局双方</p>
+              <h2 id="playersTitle">弈者</h2>
+            </div>
+            <span class="small-tag" id="turnBadge">朱方行棋</span>
+          </div>
+
+          <div class="player-row is-current" data-player-row="red">
+            <span class="player-token player-token--red">朱</span>
+            <div class="player-info">
+              <strong>朱方 <span class="you-tag" id="redYouTag">玩家一</span></strong>
+              <small>南 · 逆时针 · 先手</small>
+            </div>
+            <div class="player-stats">
+              <span><b id="redScore">0</b><small>筹</small></span>
+              <span><b id="redCaptures">0</b><small>吃</small></span>
+              <span><b id="redSpecials">0</b><small>彩</small></span>
+            </div>
+          </div>
+
+          <div class="player-row" data-player-row="black">
+            <span class="player-token player-token--black">玄</span>
+            <div class="player-info">
+              <strong>玄方 <span class="you-tag" id="blackYouTag">玩家二</span></strong>
+              <small>北 · 顺时针 · 后手</small>
+            </div>
+            <div class="player-stats">
+              <span><b id="blackScore">0</b><small>筹</small></span>
+              <span><b id="blackCaptures">0</b><small>吃</small></span>
+              <span><b id="blackSpecials">0</b><small>彩</small></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel objective-card" aria-labelledby="objectiveTitle">
+          <div class="objective-mark" aria-hidden="true">枭</div>
+          <div>
+            <p class="eyebrow">本局目标</p>
+            <h2 id="objectiveTitle">擒杀对方之枭</h2>
+            <p>吃散得筹，杀枭即胜。斗至六十回合无人杀枭，则比筹定局。</p>
+            <button type="button" class="inline-link" id="quickGuide">规则与证据 →</button>
+          </div>
+        </section>
+
+        <section class="panel log-card" aria-labelledby="logTitle">
+          <div class="panel-top">
+            <div>
+              <p class="eyebrow">手谈</p>
+              <h2 id="logTitle">对局记录</h2>
+            </div>
+            <span class="small-tag" id="logCount">0 条</span>
+          </div>
+          <ol class="game-log" id="gameLog" aria-live="polite"></ol>
+        </section>
+
+        <div class="aside-actions">
+          <button type="button" class="text-button" id="restartBtn">重开本局</button>
+          <button type="button" class="text-button" id="modeSwitchBtn">切换模式</button>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <span class="footer-seal" aria-hidden="true">汉</span>
+        <p>
+          <strong>六博 · 汉局</strong>
+          以数字博物馆方式呈现一项规则失传的古代博戏。它不是汉代原制的“标准答案”。
+        </p>
+      </div>
+      <p class="footer-meta">28 位博道 · 六箸 · 十二棋 · 一枭五散（假说）</p>
+    </footer>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="sr-only" id="liveStatus" aria-live="polite"></div>
+
+    <dialog class="dialog dialog--start" id="startDialog" aria-labelledby="startTitle">
+      <div class="start-shell">
+        <button type="button" class="dialog-close" data-close-dialog="startDialog" aria-label="关闭欢迎页">
+          ×
+        </button>
+        <div class="start-copy">
+          <div class="start-seal" aria-hidden="true">博</div>
+          <p class="eyebrow">数字复原 · 可玩方案 v1.0</p>
+          <h2 id="startTitle">六博 · 汉局</h2>
+          <p class="start-lead">六箸定步，十二棋争道。<br />一枭为贵，杀枭者胜。</p>
+          <p class="start-body">
+            这是基于汉代博戏文献线索建立的<strong>现代可玩复原</strong>，并非已被证实的汉代原规则。行棋路线、吃子、计分与回合上限均在游戏内逐项标注。
+          </p>
+          <div class="start-note">
+            <span aria-hidden="true">!</span>
+            <p><strong>考据优先</strong> 若你关心哪些是史料、哪些是假说，请先打开“考据与规则”。</p>
+          </div>
+        </div>
+
+        <div class="mode-panel">
+          <p class="eyebrow">选择入局方式</p>
+          <button type="button" class="mode-card" id="startPvp">
+            <span class="mode-icon mode-icon--pvp" aria-hidden="true">
+              <i>朱</i><i>玄</i>
+            </span>
+            <span class="mode-copy">
+              <strong>双人对弈</strong>
+              <small>同屏轮流 · 朱方先手</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">→</span>
+          </button>
+          <button type="button" class="mode-card" id="startPve">
+            <span class="mode-icon mode-icon--pve" aria-hidden="true">
+              <i>朱</i><b>弈</b>
+            </span>
+            <span class="mode-copy">
+              <strong>人机对弈</strong>
+              <small>你执朱方 · 电脑执玄方</small>
+            </span>
+            <span class="mode-arrow" aria-hidden="true">→</span>
+          </button>
+          <div class="mode-links">
+            <button type="button" class="inline-link" id="startGuide">先读考据</button>
+            <span>·</span>
+            <button type="button" class="inline-link" id="browseBoard">只看博局</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="dialog dialog--guide" id="guideDialog" aria-labelledby="guideTitle">
+      <div class="guide-shell">
+        <header class="guide-header">
+          <div>
+            <p class="eyebrow">六博 · 汉局 / 研究手册</p>
+            <h2 id="guideTitle">考据与规则</h2>
+          </div>
+          <button type="button" class="dialog-close dialog-close--static" data-close-dialog="guideDialog" aria-label="关闭考据手册">
+            ×
+          </button>
+        </header>
+        <nav class="guide-tabs" role="tablist" aria-label="考据手册章节">
+          <button type="button" class="guide-tab is-active" data-guide-tab="rules" role="tab" aria-selected="true">如何对弈</button>
+          <button type="button" class="guide-tab" data-guide-tab="evidence" role="tab" aria-selected="false">证据清单</button>
+          <button type="button" class="guide-tab" data-guide-tab="museum" role="tab" aria-selected="false">器物图谱</button>
+          <button type="button" class="guide-tab" data-guide-tab="sources" role="tab" aria-selected="false">参考与局限</button>
+        </nav>
+        <div class="guide-content" id="guideContent" role="tabpanel" tabindex="0"></div>
+      </div>
+    </dialog>
+
+    <dialog class="dialog dialog--confirm" id="restartDialog" aria-labelledby="restartTitle">
+      <div class="confirm-shell">
+        <p class="eyebrow">重新开局</p>
+        <h2 id="restartTitle">要重开本局吗？</h2>
+        <p>当前棋局、吃子与博筹都会清除。对弈模式保持不变。</p>
+        <div class="confirm-actions">
+          <button type="button" class="secondary-button" data-close-dialog="restartDialog">继续对弈</button>
+          <button type="button" class="primary-button" id="confirmRestart">确认重开</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="dialog dialog--result" id="resultDialog" aria-labelledby="resultTitle">
+      <div class="result-shell">
+        <p class="eyebrow">局终</p>
+        <div class="result-seal" id="resultSeal" aria-hidden="true">胜</div>
+        <h2 id="resultTitle">朱方杀枭</h2>
+        <p class="result-subtitle" id="resultSubtitle"></p>
+        <p class="result-score" id="resultScore"></p>
+        <div class="confirm-actions">
+          <button type="button" class="secondary-button" id="viewBoardAfterResult">看棋盘</button>
+          <button type="button" class="primary-button" id="againBtn">再来一局</button>
+        </div>
+      </div>
+    </dialog>
+
+    <noscript>
+      <div class="noscript">本游戏需要启用 JavaScript 才能运行。</div>
+    </noscript>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
